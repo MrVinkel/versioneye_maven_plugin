@@ -1,18 +1,15 @@
 package com.versioneye;
 
+import com.versioneye.log.MavenLogger;
 import com.versioneye.utils.PropertiesUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.dependency.graph.DependencyGraphBuilder;
-import org.eclipse.aether.RepositorySystem;
-import org.eclipse.aether.RepositorySystemSession;
-import org.eclipse.aether.repository.RemoteRepository;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -28,7 +25,7 @@ import java.util.Properties;
 /**
  * The Mother of all Mojos!
  */
-public class SuperMojo extends AbstractMojo {
+public abstract class SuperMojo extends AbstractMojo {
 
     protected static final String propertiesFile = "versioneye.properties";
 
@@ -110,15 +107,28 @@ public class SuperMojo extends AbstractMojo {
     @Parameter( property = "transitiveDependencies" )
     protected boolean transitiveDependencies = false;
 
-    protected Properties properties = null;     // Properties in src/main/resources
-
-    protected Log log;
+    // Properties in src/main/resources
+    protected Properties properties = null;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        log = getLog();
+        new MavenLogger(getLog());
+        try {
+            doExecute();
+        } catch (MojoFailureException e) {
+            throw e;
+        } catch (MojoExecutionException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new MojoExecutionException("Oh no! Something went wrong. " +
+                    "Get in touch with the VersionEye guys and give them feedback. " +
+                    "You find them on Twitter at https//twitter.com/VersionEye. " + e.getMessage(), e);
+        }
     }
 
+    public abstract void doExecute() throws Exception;
 
+
+    //todo API
     protected String fetchApiKey() throws Exception {
         if (apiKey != null && !apiKey.isEmpty() )
             return apiKey;
@@ -152,6 +162,7 @@ public class SuperMojo extends AbstractMojo {
     }
 
 
+    //todo API
     protected String fetchBaseUrl() throws Exception {
         if (baseUrl != null && !baseUrl.isEmpty() )
             return baseUrl;
@@ -180,6 +191,7 @@ public class SuperMojo extends AbstractMojo {
     }
 
 
+    // todo properties util stuff
     protected String fetchProjectId() throws Exception {
         if (projectId != null && !projectId.isEmpty() )
             return projectId;
@@ -214,10 +226,11 @@ public class SuperMojo extends AbstractMojo {
         return projectId;
     }
 
-
+    // todo properties util stuff
     protected Properties fetchProjectProperties() throws Exception {
-        if (properties != null)
+        if (properties != null) {
             return properties;
+        }
         String propertiesPath = getPropertiesPath();
         System.out.println("propertiesPath: " + propertiesPath);
         File file = new File(propertiesPath);
@@ -228,7 +241,7 @@ public class SuperMojo extends AbstractMojo {
         return properties;
     }
 
-
+    // todo properties util stuff
     protected String getPropertiesPath() throws Exception {
         if (this.propertiesPath != null && !this.propertiesPath.isEmpty())
             return this.propertiesPath;
@@ -242,7 +255,7 @@ public class SuperMojo extends AbstractMojo {
         return propertiesPath;
     }
 
-
+    // todo properties util stuff
     private void createPropertiesFile(File file) throws IOException {
         File parent = file.getParentFile();
         if (!parent.exists()){
@@ -255,7 +268,7 @@ public class SuperMojo extends AbstractMojo {
         file.createNewFile();
     }
 
-
+    //todo Proxy handler
     protected void initTls(){
         TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager(){
             public X509Certificate[] getAcceptedIssuers(){return null;}
@@ -271,7 +284,7 @@ public class SuperMojo extends AbstractMojo {
         }
     }
 
-
+    //todo Proxy handler
     protected void setProxy(){
         try{
             if (proxyHost == null || proxyHost.isEmpty()){
@@ -329,7 +342,7 @@ public class SuperMojo extends AbstractMojo {
         System.getProperties().put("http.proxyPassword", proxyPassword);
     }
 
-
+    // todo properties util stuff
     private String getPropertyFromPath(String propertiesPath, String propertiesKey ) throws Exception {
         File file = new File(propertiesPath);
         if (file.exists()){

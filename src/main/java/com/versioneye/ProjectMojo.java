@@ -17,8 +17,9 @@ import java.util.*;
 /**
  * Methods required to deal with projects resource
  */
-public class ProjectMojo extends SuperMojo {
+public abstract class ProjectMojo extends SuperMojo {
 
+    //todo Json converter
     protected ByteArrayOutputStream getTransitiveDependenciesJsonStream(String nameStrategy) throws Exception {
 
         DependencyResolver dependencyResolver = new DependencyResolver(project, dependencyGraphBuilder, excludeScopes);
@@ -47,6 +48,7 @@ public class ProjectMojo extends SuperMojo {
         return JsonUtils.dependenciesToJson(project, dependencies, nameStrategy);
     }
 
+    //todo Json converter
     protected ByteArrayOutputStream getDirectDependenciesJsonStream(String nameStrategy) throws Exception {
         DependencyResolver dependencyResolver = new DependencyResolver(project, dependencyGraphBuilder, excludeScopes);
 
@@ -65,6 +67,7 @@ public class ProjectMojo extends SuperMojo {
         return JsonUtils.dependenciesToJson(project, dependencies, nameStrategy);
     }
 
+    //todo Json converter
     protected Map<String, Object> getDirectDependenciesJsonMap(String nameStrategy) throws Exception {
         List<Dependency> dependencies = project.getDependencies();
         if (dependencies == null || dependencies.isEmpty()){
@@ -76,30 +79,8 @@ public class ProjectMojo extends SuperMojo {
         return JsonUtils.getJsonPom(project, dependencyHashes, nameStrategy);
     }
 
-    protected void prettyPrint0End() throws Exception {
-        getLog().info(".");
-        getLog().info("There are no dependencies in this project! - " + project.getId() );
-        getLog().info(".");
-    }
 
-    protected void prettyPrint(ProjectJsonResponse response) throws Exception {
-        getLog().info(".");
-        getLog().info("Project name: " + response.getName());
-        getLog().info("Project id: "   + response.getId());
-        getLog().info("Dependencies: " + response.getDep_number());
-        getLog().info("Outdated: "     + response.getOut_number());
-        for (ProjectDependency dependency : response.getDependencies() ){
-            if (dependency.getOutdated() == false){
-                continue;
-            }
-            getLog().info(" - " + dependency.getProd_key() + ":" + dependency.getVersion_requested() + " -> " + dependency.getVersion_current());
-        }
-        getLog().info("");
-        String projectID = (String) mavenSession.getTopLevelProject().getContextValue("veye_project_id");
-        getLog().info("You can find your updated project here: " + fetchBaseUrl() + "/user/projects/" + projectID);
-        getLog().info("");
-    }
-
+    //todo api
     protected ProjectJsonResponse updateExistingProject(String resource, String projectId, ByteArrayOutputStream outStream) throws Exception {
         String apiKey = fetchApiKey();
         String url = fetchBaseUrl() + apiPath + resource + "/" + projectId + "?api_key=" + apiKey;
@@ -108,7 +89,7 @@ public class ProjectMojo extends SuperMojo {
         return mapper.readValue(reader, ProjectJsonResponse.class );
     }
 
-
+    //todo api
     protected ProjectJsonResponse createNewProject(String resource, ByteArrayOutputStream outStream) throws Exception {
         String apiKey = fetchApiKey();
         String url = fetchBaseUrl() + apiPath + resource + apiKey;
@@ -117,6 +98,7 @@ public class ProjectMojo extends SuperMojo {
         return mapper.readValue(reader, ProjectJsonResponse.class );
     }
 
+    //todo api
     protected void merge(String childId) {
         if (mergeAfterCreate == false) {
             return ;
@@ -137,6 +119,7 @@ public class ProjectMojo extends SuperMojo {
         }
     }
 
+    //todo properties
     protected void writeProperties(ProjectJsonResponse response) throws Exception {
         Properties properties = fetchProjectProperties();
         if (response.getId() != null) {
@@ -151,61 +134,5 @@ public class ProjectMojo extends SuperMojo {
             getLog().info(" - dependency: " + dep.getGroupId() + "/" + dep.getArtifactId() + " " + dep.getVersion());
         }
     }
-
- /*   private List<Plugin> getPluginsFromXml(){
-        List<Plugin> plugins = new ArrayList<Plugin>();
-        try {
-            File pom = project.getModel().getPomFile();
-
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(pom);
-            XPathFactory xPathfactory = XPathFactory.newInstance();
-            XPath xpath = xPathfactory.newXPath();
-            XPathExpression expr = xpath.compile("//plugins/plugin");
-
-            NodeList nl = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-            for (int i = 0 ; i < nl.getLength() ; i++){
-                Node node = nl.item(i);
-                Plugin plugin = new Plugin();
-                fillPlugin(node, plugin);
-                if (plugin.getGroupId() != null && plugin.getArtifactId() != null){
-                    plugins.add(plugin);
-                }
-            }
-        } catch (Exception exc){
-            getLog().error(exc);
-        }
-        return plugins;
-    }*/
-/*
-    private void fillPlugin(Node node, Plugin plugin){
-        for (int xi = 0 ; xi < node.getChildNodes().getLength() ; xi++ ){
-            Node child = node.getChildNodes().item(xi);
-            if (child == null){
-                return ;
-            }
-            if (child.getNodeName().equals("groupId")){
-                plugin.setGroupId(child.getTextContent().trim());
-            }
-            if (child.getNodeName().equals("artifactId")){
-                plugin.setArtifactId(child.getTextContent().trim());
-            }
-            if (child.getNodeName().equals("version")){
-                String version = parseVersionString( child.getTextContent().trim() );
-                plugin.setVersion(version);
-            }
-        }
-    }*/
-/*
-
-    private String parseVersionString(String version){
-        if (version.startsWith("${")){
-            String verValue = version.replaceAll("\\$\\{", "").replaceAll("\\}", "");
-            version = (String) project.getProperties().get(verValue);
-        }
-        return version;
-    }
-*/
 
 }
