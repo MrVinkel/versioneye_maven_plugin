@@ -7,51 +7,45 @@ import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.*;
 
 /**
  * Methods to deal with JSON.
  */
-public class JsonUtils {
+public class JsonUtil {
+
+    private JsonUtil() {
+        // Util class
+    }
 
     public static ByteArrayOutputStream dependenciesToJson(MavenProject project, List<Dependency> dependencies, String nameStrategy) throws Exception {
         List<Map<String, Object>> dependencyHashes = new ArrayList<Map<String, Object>>();
         if ((dependencies != null && !dependencies.isEmpty())) {
-            dependencyHashes = getDependencyHashes(dependencies, null);
+            dependencyHashes = getDependencyHashes(dependencies);
         }
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         toJson(outputStream, getJsonPom(project, dependencyHashes, nameStrategy));
         return outputStream;
     }
 
-    public void dependenciesToJsonFile(Map<String, Object> directDependencies, String file) throws Exception {
-        File targetFile = getTargetFile(file);
-        toJson(new FileOutputStream(targetFile), directDependencies);
-    }
-
     public static void toJson(OutputStream output, Object input) throws Exception {
-         ObjectMapper mapper = new ObjectMapper();
-         mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-         mapper.writeValue(output, input);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+        mapper.writeValue(output, input);
     }
 
 
-    public static List<Map<String, Object>> getDependencyHashes(List<Dependency> directDependencies, List<Plugin> plugins){
+    public static List<Map<String, Object>> getDependencyHashes(List<Dependency> directDependencies) {
         List<Map<String, Object>> hashes = new Vector<Map<String, Object>>();
-        if (directDependencies != null && directDependencies.size() > 0){
-            hashes.addAll( generateHashFromDependencyList( directDependencies));
-        }
-        if (plugins != null && plugins.size() > 0){
-            hashes.addAll( generateHashFromPluginList(plugins));
+        if (directDependencies != null && directDependencies.size() > 0) {
+            hashes.addAll(generateHashFromDependencyList(directDependencies));
         }
         return hashes;
     }
 
     public static List<Map<String, Object>> generateHashFromDependencyList(List<Dependency> input) {
-        if (input == null || input.isEmpty()){
+        if (input == null || input.isEmpty()) {
             return null;
         }
         List<Map<String, Object>> output = new Vector<Map<String, Object>>(input.size());
@@ -59,28 +53,13 @@ public class JsonUtils {
             HashMap<String, Object> hash = new HashMap<String, Object>(2);
             hash.put("version", dependency.getVersion());
             hash.put("name", dependency.getGroupId() + ":" + dependency.getArtifactId());
-            hash.put("scope", dependency.getScope() );
+            hash.put("scope", dependency.getScope());
             output.add(hash);
         }
         return output;
     }
 
-    public static List<Map<String, Object>> generateHashFromPluginList(List<Plugin> input) {
-        if (input == null || input.isEmpty()){
-            return null;
-        }
-        List<Map<String, Object>> output = new Vector<Map<String, Object>>(input.size());
-        for (Plugin plugin : input) {
-            HashMap<String, Object> hash = new HashMap<String, Object>(2);
-            hash.put("version", plugin.getVersion());
-            hash.put("name", plugin.getGroupId() + ":" + plugin.getArtifactId());
-            hash.put("scope", "plugin" );
-            output.add(hash);
-        }
-        return output;
-    }
-
-    public static Map<String, Object> getJsonPom(MavenProject project, List<Map<String, Object>> dependencyHashes, String nameStrategy){
+    public static Map<String, Object> getJsonPom(MavenProject project, List<Map<String, Object>> dependencyHashes, String nameStrategy) {
         Map<String, Object> pom = new HashMap<String, Object>();
         pom.put("name", getNameFor(project, nameStrategy));
         pom.put("group_id", project.getGroupId());
@@ -93,31 +72,22 @@ public class JsonUtils {
         return pom;
     }
 
-    private static String getNameFor(MavenProject project, String nameStrategy){
+    private static String getNameFor(MavenProject project, String nameStrategy) {
         String name = "project";
-        if (nameStrategy == null || nameStrategy.isEmpty()){
+        if (nameStrategy == null || nameStrategy.isEmpty()) {
             nameStrategy = "name";
         }
-        if (nameStrategy.equals("name")){
+        if (nameStrategy.equals("name")) {
             name = project.getName();
-            if (name == null || name.isEmpty()){
+            if (name == null || name.isEmpty()) {
                 name = project.getArtifactId();
             }
-        } else if (nameStrategy.equals("artifact_id")){
+        } else if (nameStrategy.equals("artifact_id")) {
             name = project.getArtifactId();
-        } else if (nameStrategy.equals("GA")){
+        } else if (nameStrategy.equals("GA")) {
             name = project.getGroupId() + "/" + project.getArtifactId();
         }
         return name;
-    }
-
-    private File getTargetFile(String file){
-        File targetFile = new File(file);
-        File parent = targetFile.getParentFile();
-        if (!parent.exists()){
-            parent.mkdirs();
-        }
-        return targetFile;
     }
 
 }

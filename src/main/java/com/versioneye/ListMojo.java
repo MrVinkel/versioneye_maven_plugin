@@ -15,7 +15,7 @@ import static com.versioneye.utils.log.LogUtil.logDependencySummary;
  * Lists all direct and recursive dependencies.
  */
 @Mojo(name = "list", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
-public class ListMojo extends ProjectMojo {
+public class ListMojo extends AbstractSuperMojo {
 
     @Override
     public void doExecute() throws Exception {

@@ -18,22 +18,17 @@ public class VersionEyeAPI {
     private static final Logger LOGGER = Logger.getLogger();
 
     private final String apiUrl;
-    private final String baseUrl;
-    private final String apiVersion;
     private final String apiKey;
     private final JsonHttpClient client;
 
     public VersionEyeAPI(String baseUrl, String apiVersion, String apiKey) {
-        this.baseUrl = baseUrl;
-        this.apiVersion = apiVersion;
-        this.apiKey = apiKey;
+        this.apiKey = "?api_key=" + apiKey;
         this.apiUrl = baseUrl + "/api/" + apiVersion;
-
         client = new JsonHttpClient();
     }
 
     public ProjectJsonResponse createProject(ByteArrayOutputStream jsonDependencies, String visibility, String projectName, String organisationName, String teamName) throws Exception {
-        String url = apiUrl + "/projects?api_key=" + apiKey;
+        String url = apiUrl + "/projects" + apiKey;
 
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         ByteArrayBody byteArrayBody = new ByteArrayBody(jsonDependencies.toByteArray(), APPLICATION_JSON, "pom.json");
@@ -50,7 +45,7 @@ public class VersionEyeAPI {
     }
 
     public ProjectJsonResponse updateProject(ByteArrayOutputStream jsonDependencies, String projectId) throws Exception {
-        String url = apiUrl + "/projects/" + projectId + "?api_key=" + apiKey;
+        String url = apiUrl + "/projects/" + projectId + apiKey;
 
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         ByteArrayBody byteArrayBody = new ByteArrayBody(jsonDependencies.toByteArray(), APPLICATION_JSON, "pom.json");
@@ -67,18 +62,18 @@ public class VersionEyeAPI {
             LOGGER.debug("Skipping merge - projectIds are the same");
             return "";
         }
-        String url = baseUrl + "/projects/" + projectIdParent + "/merge/" + projectIdChild + "?api_key=" + apiKey;
+        String url = apiUrl + "/projects/" + projectIdParent + "/merge/" + projectIdChild + apiKey;
         //todo what does it return
         return client.get(url);
     }
 
     public void deleteProject(String projectId) throws Exception {
-        String url = apiUrl + "/projects/" + projectId + "?api_key=" + apiKey;
+        String url = apiUrl + "/projects/" + projectId + apiKey;
         client.delete(url);
     }
 
     public String ping() throws Exception {
-        String url = baseUrl + "/services/ping";
+        String url = apiUrl + "/services/ping";
         return client.get(url);
     }
 

@@ -13,17 +13,17 @@ public class SecurityAndLicenseCheckMojo extends UpdateMojo {
         super.validateResponse(response);
         if (response.getSv_count() > 0) {
             throw new MojoFailureException("Some components have security vulnerabilities! " +
-                    "More details here: " + fetchBaseUrl() + "/user/projects/" + response.getId());
+                    "More details here: " + baseUrl + "/user/projects/" + response.getId());
         }
 
         if (response.getLicenses_red() > 0) {
             throw new MojoFailureException("Some components violate the license whitelist! " +
-                    "More details here: " + fetchBaseUrl() + "/user/projects/" + response.getId());
+                    "More details here: " + baseUrl + "/user/projects/" + response.getId());
         }
 
         if (response.getLicenses_unknown() > 0 && licenseCheckBreakByUnknown) {
             throw new MojoFailureException("Some components are without any license! " +
-                    "More details here: " + fetchBaseUrl() + "/user/projects/" + response.getId());
+                    "More details here: " + baseUrl + "/user/projects/" + response.getId());
         }
     }
 }

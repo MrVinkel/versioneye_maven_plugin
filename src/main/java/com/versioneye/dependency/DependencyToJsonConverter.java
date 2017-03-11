@@ -1,6 +1,6 @@
 package com.versioneye.dependency;
 
-import com.versioneye.utils.JsonUtils;
+import com.versioneye.utils.JsonUtil;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
@@ -50,7 +50,7 @@ public class DependencyToJsonConverter {
             }
             dependenciesList.add(dependency);
         }
-        return JsonUtils.dependenciesToJson(project, dependenciesList, nameStrategy);
+        return JsonUtil.dependenciesToJson(project, dependenciesList, nameStrategy);
     }
 
 }

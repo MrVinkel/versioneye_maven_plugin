@@ -14,7 +14,7 @@ public class SecurityCheckMojo extends UpdateMojo {
 
         if (response.getSv_count() > 0) {
             throw new MojoExecutionException("Some components have security vulnerabilities! " +
-                    "More details here: " + fetchBaseUrl() + "/user/projects/" + response.getId());
+                    "More details here: " + baseUrl + "/user/projects/" + response.getId());
         }
     }
 }

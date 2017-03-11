@@ -11,7 +11,7 @@ import static com.versioneye.utils.log.LogUtil.logJsonLocation;
  * Writes all direct dependencies into a JSON file.
  */
 @Mojo(name = "json", aggregator = true)
-public class JsonMojo extends ProjectMojo {
+public class JsonMojo extends AbstractSuperMojo {
 
     @Override
     public void doExecute() throws Exception {

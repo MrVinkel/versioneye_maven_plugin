@@ -12,18 +12,12 @@ public class LogUtil {
     private static final Logger LOGGER = Logger.getLogger();
 
     private LogUtil() {
-        // Util methods for producing nice output
+        // Util methods for producing output
     }
 
     public static void logVersionEyeBanner() {
         LOGGER.info("");
         LOGGER.info("************* \\_/ VersionEye \\_/ *************");
-        LOGGER.info("");
-    }
-
-    public static void logNoDependenciesFound(MavenProject project) throws Exception {
-        LOGGER.info("");
-        LOGGER.info("There are no dependencies in this project! - " + project.getId());
         LOGGER.info("");
     }
 
@@ -74,7 +68,6 @@ public class LogUtil {
 //        LOGGER.info("You can find your updated project here: " + fetchBaseUrl() + "/user/projects/" + projectID);
         LOGGER.info("");
     }
-
 
     public static void logStartDeleteProject(String projectName) {
         LOGGER.info("");

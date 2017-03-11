@@ -8,14 +8,11 @@ import org.apache.maven.plugins.annotations.Mojo;
  * Ping the VersionEye API. Expects a pong in response.
  */
 @Mojo(name = "ping", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
-public class PingMojo extends SuperMojo {
+public class PingMojo extends AbstractSuperMojo {
     private static final Logger LOGGER = Logger.getLogger();
 
     @Override
     public void doExecute() throws Exception {
-        //todo proxy
-        setProxy();
-//        initTls();
         LOGGER.info("");
         LOGGER.info("Sending ping...");
         LOGGER.info("Received " + api.ping());
