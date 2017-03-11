@@ -16,7 +16,6 @@ import static com.versioneye.utils.log.LogUtil.logDependencySummary;
 
 @Mojo(name = "aggregated-list", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class AggregatedListMojo extends AbstractAggregatedMojo {
-
     private static final Logger LOGGER = Logger.getLogger();
 
     @Override

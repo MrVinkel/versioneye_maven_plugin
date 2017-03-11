@@ -2,19 +2,21 @@ package com.versioneye;
 
 import com.versioneye.dependency.DependencyToJsonConverter;
 import com.versioneye.dto.ProjectJsonResponse;
+import com.versioneye.utils.log.Logger;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
 import java.io.ByteArrayOutputStream;
 
 import static com.versioneye.utils.log.LogUtil.*;
-import static org.eclipse.aether.spi.log.NullLoggerFactory.LOGGER;
 
 /**
  * Updates an existing project at VersionEye with the dependencies from the current project.
  */
 @Mojo(name = "update", defaultPhase = LifecyclePhase.PACKAGE)
 public class UpdateMojo extends AbstractSuperMojo {
+
+    private static final Logger LOGGER = Logger.getLogger();
 
     @Override
     public void doExecute() throws Exception {
