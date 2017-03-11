@@ -22,7 +22,7 @@ public class CreateMojo extends AbstractSuperMojo {
         ByteArrayOutputStream jsonDependenciesStream = dependencyToJsonConverter.getDependenciesAsJsonStream(name, transitiveDependencies, excludeScopes);
         ProjectJsonResponse response = api.createProject(jsonDependenciesStream, visibility, name, organisation, team);
 
-        logJsonResponse(response);
+        logJsonResponse(response, baseUrl, response.getId());
 
         if (updateProperties) {
             properties.updateProjectProperties();

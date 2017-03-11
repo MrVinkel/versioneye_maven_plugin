@@ -35,7 +35,7 @@ public class UpdateMojo extends AbstractSuperMojo {
             api.mergeProjects(mavenSession.getTopLevelProject().getContextValue("veye_project_id").toString(), response.getId());
         }
 
-        logJsonResponse(response);
+        logJsonResponse(response, baseUrl, mavenSession.getTopLevelProject().getContextValue("veye_project_id").toString());
 
         if (updateProperties) {
             properties.updateProjectProperties();

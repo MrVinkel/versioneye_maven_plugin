@@ -50,7 +50,7 @@ public class LogUtil {
         LOGGER.info("");
     }
 
-    public static void logJsonResponse(ProjectJsonResponse response) throws Exception {
+    public static void logJsonResponse(ProjectJsonResponse response, String baseUrl, String projectID) throws Exception {
         LOGGER.info("");
         LOGGER.info("Project name: " + response.getName());
         LOGGER.info("Project id: " + response.getId());
@@ -63,9 +63,7 @@ public class LogUtil {
             LOGGER.info(" - " + dependency.getProd_key() + ":" + dependency.getVersion_requested() + " -> " + dependency.getVersion_current());
         }
         LOGGER.info("");
-        // seems like a extreme retarded way to build up the project URL
-//        String projectID = (String) mavenSession.getTopLevelProject().getContextValue("veye_project_id");
-//        LOGGER.info("You can find your updated project here: " + fetchBaseUrl() + "/user/projects/" + projectID);
+        LOGGER.info("You can find your updated project here: " + baseUrl + "/user/projects/" + projectID);
         LOGGER.info("");
     }
 

@@ -21,10 +21,11 @@ public class VersionEyeAPI {
     private final String apiKey;
     private final JsonHttpClient client;
 
-    public VersionEyeAPI(String baseUrl, String apiVersion, String apiKey) {
+    public VersionEyeAPI(String baseUrl, String apiVersion, String apiKey, String proxyHost, String proxyPort, String proxyUsername, String proxyPassword) {
         this.apiKey = "?api_key=" + apiKey;
         this.apiUrl = baseUrl + "/api/" + apiVersion;
         client = new JsonHttpClient();
+        client.setProxy(proxyHost, proxyPort, proxyUsername, proxyPassword);
     }
 
     public ProjectJsonResponse createProject(ByteArrayOutputStream jsonDependencies, String visibility, String projectName, String organisationName, String teamName) throws Exception {

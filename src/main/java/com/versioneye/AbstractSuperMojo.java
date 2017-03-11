@@ -16,9 +16,7 @@ import java.io.File;
 import java.util.List;
 
 import static com.versioneye.utils.log.LogUtil.logVersionEyeBanner;
-import static com.versioneye.utils.properties.VersionEyeProperties.PropertyKey.API_KEY;
-import static com.versioneye.utils.properties.VersionEyeProperties.PropertyKey.BASE_URL;
-import static com.versioneye.utils.properties.VersionEyeProperties.PropertyKey.PROJECT_ID;
+import static com.versioneye.utils.properties.VersionEyeProperties.PropertyKey.*;
 
 /**
  * The Mother of all Mojos!
@@ -113,9 +111,13 @@ public abstract class AbstractSuperMojo extends AbstractMojo {
             apiKey = properties.resolveProperty(API_KEY, apiKey);
             baseUrl = properties.resolveProperty(BASE_URL, baseUrl);
             name = resolveNameWithNamingStrategy(nameStrategy, name);
-            //todo proxy
-            setProxy();
-            api = new VersionEyeAPI(baseUrl, apiVersion, apiKey);
+
+            proxyHost = properties.resolveProperty(PROXY_HOST, proxyHost);
+            proxyPort = properties.resolveProperty(PROXY_PORT, proxyPort);
+            proxyUser = properties.resolveProperty(PROXY_USER, proxyUser);
+            proxyPassword = properties.resolveProperty(PROXY_PASSWORD, proxyPassword);
+
+            api = new VersionEyeAPI(baseUrl, apiVersion, apiKey, proxyHost, proxyPort, proxyUser, proxyPassword);
 
             doExecute();
         } catch (MojoFailureException e) {
@@ -129,8 +131,10 @@ public abstract class AbstractSuperMojo extends AbstractMojo {
         }
     }
 
+    public abstract void doExecute() throws Exception;
+
     private String resolveNameWithNamingStrategy(String nameStrategy, String name) {
-        if(name != null && !name.isEmpty()) {
+        if (name != null && !name.isEmpty()) {
             return name;
         }
         if (nameStrategy == null || nameStrategy.isEmpty()) {
@@ -148,33 +152,4 @@ public abstract class AbstractSuperMojo extends AbstractMojo {
         }
         return name;
     }
-
-    public abstract void doExecute() throws Exception;
-
-
-    //todo Proxy handler
-    protected void setProxy() {
-
-
-        boolean emptyProxyHost = proxyHost == null || proxyHost.isEmpty();
-        boolean emptyProxyPort = proxyPort == null || proxyPort.isEmpty();
-        if (emptyProxyHost && emptyProxyPort) {
-            return;
-        }
-        System.setProperty("proxySet", "true");
-        System.setProperty("http.proxyHost", proxyHost);
-        System.setProperty("http.proxyPort", proxyPort);
-        System.setProperty("https.proxyHost", proxyHost);
-        System.setProperty("https.proxyPort", proxyPort);
-
-        boolean emptyProxyUser = proxyUser == null || proxyUser.isEmpty();
-        boolean emptyProxyPass = proxyPassword == null || proxyPassword.isEmpty();
-        if (emptyProxyUser && emptyProxyPass) {
-            return;
-        }
-        System.getProperties().put("http.proxyUser", proxyUser);
-        System.getProperties().put("http.proxyPassword", proxyPassword);
-    }
-
-
 }
