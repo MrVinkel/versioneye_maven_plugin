@@ -15,6 +15,4 @@ public class DeleteMojo extends AbstractSuperMojo {
         properties.deleteProjectPropertiesFile();
         logProjectDeleted();
     }
-
-
 }

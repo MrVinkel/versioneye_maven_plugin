@@ -1,7 +1,6 @@
 package com.versioneye.utils;
 
 import org.apache.maven.model.Dependency;
-import org.apache.maven.model.Plugin;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -19,13 +18,13 @@ public class JsonUtil {
         // Util class
     }
 
-    public static ByteArrayOutputStream dependenciesToJson(MavenProject project, List<Dependency> dependencies, String nameStrategy) throws Exception {
+    public static ByteArrayOutputStream dependenciesToJson(MavenProject project, List<Dependency> dependencies, String name) throws Exception {
         List<Map<String, Object>> dependencyHashes = new ArrayList<Map<String, Object>>();
         if ((dependencies != null && !dependencies.isEmpty())) {
             dependencyHashes = getDependencyHashes(dependencies);
         }
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        toJson(outputStream, getJsonPom(project, dependencyHashes, nameStrategy));
+        toJson(outputStream, getJsonPom(project, dependencyHashes, name));
         return outputStream;
     }
 
@@ -59,9 +58,9 @@ public class JsonUtil {
         return output;
     }
 
-    public static Map<String, Object> getJsonPom(MavenProject project, List<Map<String, Object>> dependencyHashes, String nameStrategy) {
+    public static Map<String, Object> getJsonPom(MavenProject project, List<Map<String, Object>> dependencyHashes, String name) {
         Map<String, Object> pom = new HashMap<String, Object>();
-        pom.put("name", getNameFor(project, nameStrategy));
+        pom.put("name", name);
         pom.put("group_id", project.getGroupId());
         pom.put("artifact_id", project.getArtifactId());
         pom.put("version", project.getVersion());
@@ -70,24 +69,6 @@ public class JsonUtil {
         pom.put("licenses", project.getLicenses());
         pom.put("dependencies", dependencyHashes);
         return pom;
-    }
-
-    private static String getNameFor(MavenProject project, String nameStrategy) {
-        String name = "project";
-        if (nameStrategy == null || nameStrategy.isEmpty()) {
-            nameStrategy = "name";
-        }
-        if (nameStrategy.equals("name")) {
-            name = project.getName();
-            if (name == null || name.isEmpty()) {
-                name = project.getArtifactId();
-            }
-        } else if (nameStrategy.equals("artifact_id")) {
-            name = project.getArtifactId();
-        } else if (nameStrategy.equals("GA")) {
-            name = project.getGroupId() + "/" + project.getArtifactId();
-        }
-        return name;
     }
 
 }

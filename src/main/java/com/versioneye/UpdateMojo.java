@@ -21,7 +21,7 @@ public class UpdateMojo extends AbstractSuperMojo {
         logStartUploadDependencies();
 
         DependencyToJsonConverter dependencyToJsonConverter = new DependencyToJsonConverter(project, dependencyGraphBuilder);
-        ByteArrayOutputStream jsonDependenciesStream = dependencyToJsonConverter.getDependenciesAsJsonStream(nameStrategy, transitiveDependencies, excludeScopes);
+        ByteArrayOutputStream jsonDependenciesStream = dependencyToJsonConverter.getDependenciesAsJsonStream(name, transitiveDependencies, excludeScopes);
 
         if (mavenSession.getTopLevelProject().getId().equals(mavenSession.getCurrentProject().getId())) {
             mavenSession.getTopLevelProject().setContextValue("veye_project_id", projectId);
@@ -36,6 +36,10 @@ public class UpdateMojo extends AbstractSuperMojo {
         }
 
         logJsonResponse(response);
+
+        if (updateProperties) {
+            properties.updateProjectProperties();
+        }
 
         validateResponse(response);
     }

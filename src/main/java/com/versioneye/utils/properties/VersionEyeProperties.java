@@ -1,9 +1,9 @@
 package com.versioneye.utils.properties;
 
-import java.io.File;
+import java.io.*;
 import java.util.Properties;
 
-import static com.versioneye.utils.properties.PropertiesUtil.readPropertyFile;
+import static com.versioneye.utils.properties.VersionEyeProperties.PropertyKey.PROJECT_ID;
 
 /**
  * General Version Eye properties
@@ -12,7 +12,6 @@ public class VersionEyeProperties {
 
 
     public enum PropertyKey {
-
         API_KEY("api_key", "VERSIONEYE_API_KEY"),
         BASE_URL("base_url", "VERSIONEYE_BASE_URL"),
         PROJECT_ID("project_id", "VERSIONEYE_PROJECT_ID"),
@@ -39,13 +38,15 @@ public class VersionEyeProperties {
         }
     }
 
+    private final String projectResourcesDirectoryPropertiesPath;
+
     private Properties homeDirectoryProperties;
     private Properties projectQADirectoryProperties;
     private Properties projectResourcesDirectoryProperties;
 
     public VersionEyeProperties(File homeDirectory, File projectDirectory, String propertyFileName) throws Exception {
         String projectQADirectoryPropertiesPath = projectDirectory.getCanonicalPath() + File.separator + "src" + File.separator + "qa" + File.separator + "resources" + File.separator + propertyFileName;
-        String projectResourcesDirectoryPropertiesPath = projectDirectory.getCanonicalPath() +  File.separator +"src" + File.separator + "main" + File.separator + "resources" + File.separator + propertyFileName;
+        projectResourcesDirectoryPropertiesPath = projectDirectory.getCanonicalPath() + File.separator + "src" + File.separator + "main" + File.separator + "resources" + File.separator + propertyFileName;
         String homeDirectoryPropertiesPath = homeDirectory.getCanonicalPath() + File.separator + ".m2" + File.separator + propertyFileName;
 
         projectQADirectoryProperties = readPropertyFile(projectQADirectoryPropertiesPath);
@@ -77,11 +78,27 @@ public class VersionEyeProperties {
         return value;
     }
 
-    public void deleteProjectPropertiesFile() {
-
+    public void setProjectId(String projectId) {
+        projectResourcesDirectoryProperties.setProperty(PROJECT_ID.getKey(), projectId);
     }
 
-    public void updateProjectProperties() {
+    private static Properties readPropertyFile(String filePath) throws Exception {
+        Properties properties = new Properties();
+        File file = new File(filePath);
+        InputStream inputStream = new FileInputStream(file);
+        properties.load(inputStream);
+        return properties;
+    }
 
+    public void deleteProjectPropertiesFile() {
+        File file = new File(projectResourcesDirectoryPropertiesPath);
+        file.delete();
+    }
+
+    public void updateProjectProperties() throws Exception {
+        File file = new File(projectResourcesDirectoryPropertiesPath);
+        file.getParentFile().mkdirs();
+        OutputStream out = new FileOutputStream(file);
+        projectResourcesDirectoryProperties.store(out, "Properties for https://www.VersionEye.com Maven Plugin");
     }
 }

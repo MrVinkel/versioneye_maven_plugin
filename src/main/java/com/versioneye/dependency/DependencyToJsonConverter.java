@@ -24,8 +24,7 @@ public class DependencyToJsonConverter {
         this.dependencyGraphBuilder = dependencyGraphBuilder;
     }
 
-    //todo refactor name strategy
-    public ByteArrayOutputStream getDependenciesAsJsonStream(String nameStrategy, boolean includeTransitiveDependencies, List<String> excludeScopes) throws Exception {
+    public ByteArrayOutputStream getDependenciesAsJsonStream(String name, boolean includeTransitiveDependencies, List<String> excludeScopes) throws Exception {
         DependencyResolver dependencyResolver = new DependencyResolver(project, dependencyGraphBuilder, excludeScopes);
         Set<Artifact> dependencies = new HashSet<Artifact>();
 
@@ -50,7 +49,7 @@ public class DependencyToJsonConverter {
             }
             dependenciesList.add(dependency);
         }
-        return JsonUtil.dependenciesToJson(project, dependenciesList, nameStrategy);
+        return JsonUtil.dependenciesToJson(project, dependenciesList, name);
     }
 
 }

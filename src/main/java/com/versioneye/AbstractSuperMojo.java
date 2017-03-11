@@ -112,17 +112,12 @@ public abstract class AbstractSuperMojo extends AbstractMojo {
             projectId = properties.resolveProperty(PROJECT_ID, projectId);
             apiKey = properties.resolveProperty(API_KEY, apiKey);
             baseUrl = properties.resolveProperty(BASE_URL, baseUrl);
-            //todo refactor naming strategy shit
-//            name = name == null ? project.getName() : name;
+            name = resolveNameWithNamingStrategy(nameStrategy, name);
             //todo proxy
             setProxy();
             api = new VersionEyeAPI(baseUrl, apiVersion, apiKey);
 
             doExecute();
-
-            if (updateProperties) {
-                properties.updateProjectProperties();
-            }
         } catch (MojoFailureException e) {
             throw e;
         } catch (MojoExecutionException e) {
@@ -132,6 +127,26 @@ public abstract class AbstractSuperMojo extends AbstractMojo {
                     "Get in touch with the VersionEye guys and give them feedback. " +
                     "You find them on Twitter at https//twitter.com/VersionEye. Error: " + e.getMessage(), e);
         }
+    }
+
+    private String resolveNameWithNamingStrategy(String nameStrategy, String name) {
+        if(name != null && !name.isEmpty()) {
+            return name;
+        }
+        if (nameStrategy == null || nameStrategy.isEmpty()) {
+            nameStrategy = "name";
+        }
+        if (nameStrategy.equals("name")) {
+            name = project.getExecutionProject().getName();
+            if (name == null || name.isEmpty()) {
+                name = project.getExecutionProject().getArtifactId();
+            }
+        } else if (nameStrategy.equals("artifact_id")) {
+            name = project.getExecutionProject().getArtifactId();
+        } else if (nameStrategy.equals("GA")) {
+            name = project.getExecutionProject().getGroupId() + "/" + project.getArtifactId();
+        }
+        return name;
     }
 
     public abstract void doExecute() throws Exception;
