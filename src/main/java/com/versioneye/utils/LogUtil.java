@@ -16,7 +16,7 @@ public class LogUtil {
         // Util methods for producing nice output
     }
 
-    public static void versionEyeOutput() {
+    public static void logVersionEyeBanner() {
         LOGGER.info("");
         LOGGER.info("************* \\_/ VersionEye \\_/ *************");
         LOGGER.info("");
@@ -77,9 +77,15 @@ public class LogUtil {
     }
 
 
-    public static void logStartDeleteProject() {
+    public static void logStartDeleteProject(String projectName) {
         LOGGER.info("");
-        LOGGER.info("Starting to delete this project from the VersionEye server. This can take a couple seconds ... ");
+        LOGGER.info("Starting to delete " + projectName + " from the VersionEye server...");
+        LOGGER.info("");
+    }
+
+    public static void logProjectDeleted() {
+        LOGGER.info("");
+        LOGGER.info("Project deleted");
         LOGGER.info("");
     }
 

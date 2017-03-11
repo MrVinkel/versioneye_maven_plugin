@@ -10,7 +10,6 @@ import java.util.Set;
 import static com.versioneye.dependency.DependencyResolver.asSortedList;
 import static com.versioneye.utils.LogUtil.logArtifactsList;
 import static com.versioneye.utils.LogUtil.logDependencySummary;
-import static com.versioneye.utils.LogUtil.versionEyeOutput;
 
 /**
  * Lists all direct and recursive dependencies.
@@ -20,8 +19,6 @@ public class ListMojo extends ProjectMojo {
 
     @Override
     public void doExecute() throws Exception {
-        versionEyeOutput();
-
         DependencyResolver dependencyResolver = new DependencyResolver(project, dependencyGraphBuilder, excludeScopes);
 
         Set<Artifact> directArtifacts = dependencyResolver.getDirectDependencies();

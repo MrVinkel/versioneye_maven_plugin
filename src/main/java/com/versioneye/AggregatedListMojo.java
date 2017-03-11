@@ -13,7 +13,6 @@ import static com.versioneye.dependency.DependencyResolver.asSortedList;
 import static com.versioneye.dependency.DependencyResolver.mergeArtifactsWithStrongestScope;
 import static com.versioneye.utils.LogUtil.logArtifactsList;
 import static com.versioneye.utils.LogUtil.logDependencySummary;
-import static com.versioneye.utils.LogUtil.versionEyeOutput;
 
 @Mojo(name = "aggregated-list", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class AggregatedListMojo extends ListMojo {
@@ -29,8 +28,6 @@ public class AggregatedListMojo extends ListMojo {
             LOGGER.info("Skipping");
             return;
         }
-
-        versionEyeOutput();
 
         DependencyResolver dependencyResolver = new DependencyResolver(project, dependencyGraphBuilder, excludeScopes);
 

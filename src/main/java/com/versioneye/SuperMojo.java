@@ -23,6 +23,8 @@ import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.Properties;
 
+import static com.versioneye.utils.LogUtil.logVersionEyeBanner;
+
 /**
  * The Mother of all Mojos!
  */
@@ -42,10 +44,10 @@ public abstract class SuperMojo extends AbstractMojo {
     @Parameter( defaultValue="${reactorProjects}" )
     protected List<MavenProject> reactorProjects;
 
-    @Parameter( defaultValue = "${basedir}", property = "basedir", required = true)
+    @Parameter( defaultValue = "${basedir}", property = "projectDirectory", required = true)
     protected File projectDirectory;
 
-    @Parameter( defaultValue = "${project.build.directory}", property = "outputDir", required = true )
+    @Parameter( defaultValue = "${project.build.directory}", property = "outputDirectory", required = true )
     protected File outputDirectory;
 
     @Parameter( defaultValue = "${user.home}" )
@@ -92,7 +94,7 @@ public abstract class SuperMojo extends AbstractMojo {
     protected String nameStrategy = "name";
 
     @Parameter( property = "licenseCheckBreakByUnknown" )
-    protected Boolean licenseCheckBreakByUnknown = Boolean.FALSE;
+    protected boolean licenseCheckBreakByUnknown = false;
 
     @Parameter( property = "excludeScopes" )
     protected List<String> excludeScopes = null;
@@ -120,8 +122,12 @@ public abstract class SuperMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         new MavenLogger(getLog());
         try {
-            //todo
-//            apiKey = resolveApiKey();
+            logVersionEyeBanner();
+            projectId = fetchProjectId();
+            apiKey = fetchApiKey();
+            baseUrl = fetchBaseUrl();
+            //todo refactor naming strategy shit
+//            name = name == null ? project.getName() : name;
             api = new VersionEyeAPI(baseUrl, apiVersion, apiKey);
             doExecute();
         } catch (MojoFailureException e) {
@@ -227,11 +233,11 @@ public abstract class SuperMojo extends AbstractMojo {
             propertiesPath = pPath2;
         }
 
-        if (projectId == null || projectId.isEmpty()){
+        /*if (projectId == null || projectId.isEmpty()){
             String msg = "Searched in [" + pPath1 + ", " + pPath2 + ", "+ propertiesPath +"] for project_id but could't find any.";
             getLog().error(msg);
             throw new MojoExecutionException(msg);
-        }
+        }*/
 
         return projectId;
     }

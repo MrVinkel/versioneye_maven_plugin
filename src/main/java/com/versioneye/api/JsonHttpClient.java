@@ -13,16 +13,13 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
-import static org.apache.http.HttpStatus.SC_ACCEPTED;
-import static org.apache.http.HttpStatus.SC_CREATED;
-import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.*;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
 public class JsonHttpClient {
@@ -30,28 +27,31 @@ public class JsonHttpClient {
 
     private static final String USER_AGENT = "VersionEye Maven Plugin";
 
-    private String baseUrl;
 
-    public JsonHttpClient(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
-
-    public String post(HttpEntity entity) throws Exception {
+    public String post(String url, HttpEntity entity) throws Exception {
         HttpUriRequest postRequest = RequestBuilder.post()
-                .setUri(baseUrl)
+                .setUri(url)
                 .setEntity(entity)
                 .build();
 
         return executeRequest(postRequest, SC_OK, SC_CREATED);
     }
 
-    public String get(String resource) throws Exception {
+    public String get(String url) throws Exception {
         HttpUriRequest getRequest = RequestBuilder.get()
-                .setUri(baseUrl + resource)
+                .setUri(url)
                 .setHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType())
                 .build();
 
         return executeRequest(getRequest, SC_OK);
+    }
+
+    public String delete(String url) throws Exception {
+        HttpUriRequest postRequest = RequestBuilder.delete()
+                .setUri(url)
+                .build();
+
+        return executeRequest(postRequest, SC_OK, SC_NO_CONTENT);
     }
 
     private String executeRequest(HttpUriRequest request, Integer... acceptedStatusCodes) throws Exception {
@@ -70,13 +70,7 @@ public class JsonHttpClient {
                 throw new MojoExecutionException("Failed to call " + request.getURI() + " : HTTP error code : " + response.getStatusLine().getStatusCode() + " : Error message :" + errorMessage);
             }
 
-            BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
-            StringBuilder output = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                output.append(line);
-            }
-            return output.toString();
+            return tryGetResponseBody(response);
         } finally {
             if (response != null) {
                 EntityUtils.consume(response.getEntity());
@@ -105,8 +99,8 @@ public class JsonHttpClient {
 
     private static String tryGetResponseBody(HttpResponse response) {
         try {
-            InputStream content = response.getEntity().getContent();
-            BufferedReader in = new BufferedReader(new InputStreamReader(content));
+            InputStreamReader content = new InputStreamReader((response.getEntity().getContent()));
+            BufferedReader in = new BufferedReader(content);
             String inputLine;
             StringBuilder body = new StringBuilder();
             while ((inputLine = in.readLine()) != null) {

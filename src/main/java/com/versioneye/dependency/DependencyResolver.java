@@ -60,7 +60,7 @@ public class DependencyResolver {
                     Scope scope1 = scopeFromString(artifactFromSet1.getScope());
                     Scope scope2 = scopeFromString(artifactFromSet2.getScope());
                     Scope strongestScope = getStrongestScope(scope1, scope2);
-                    LOGGER.debug("[DEBUG] Setting strongest scope to " + strongestScope.getName() + " for " + artifact.getArtifactId());
+                    LOGGER.debug("Setting strongest scope to " + strongestScope.getName() + " for " + artifact.getArtifactId());
                     artifact.setScope(strongestScope.getName());
                     break;
                 }

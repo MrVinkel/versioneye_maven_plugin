@@ -1,5 +1,6 @@
 package com.versioneye;
 
+import com.versioneye.dependency.DependencyToJsonConverter;
 import com.versioneye.dto.ProjectJsonResponse;
 import org.apache.maven.plugins.annotations.Mojo;
 
@@ -19,13 +20,8 @@ public class CreateMojo extends ProjectMojo {
         setProxy();
         logCreateProject();
 
-        ByteArrayOutputStream jsonDependenciesStream;
-        if (transitiveDependencies) {
-            jsonDependenciesStream = getTransitiveDependenciesJsonStream(nameStrategy);
-        } else {
-            jsonDependenciesStream = getDirectDependenciesJsonStream(nameStrategy);
-        }
-
+        DependencyToJsonConverter dependencyToJsonConverter = new DependencyToJsonConverter(project, dependencyGraphBuilder);
+        ByteArrayOutputStream jsonDependenciesStream = dependencyToJsonConverter.getDependenciesAsJsonStream(nameStrategy, transitiveDependencies, excludeScopes);
         ProjectJsonResponse response = api.createProject(jsonDependenciesStream, visibility, name, organisation, team);
 
         if (updatePropertiesAfterCreate) {

@@ -1,39 +1,26 @@
 package com.versioneye;
 
-
-import com.versioneye.utils.HttpUtils;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 
+import static com.versioneye.utils.LogUtil.logProjectDeleted;
 import static com.versioneye.utils.LogUtil.logStartDeleteProject;
 
-@Mojo(name = "delete", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
+@Mojo(name = "delete", aggregator = true)
 public class DeleteMojo extends ProjectMojo {
-
-    //todo api
-    @Parameter(property = "resource", defaultValue = "/projects")
-    private String resource;
 
     @Override
     public void doExecute() throws Exception {
+        //todo proxy
         setProxy();
-        logStartDeleteProject();
-        deleteProject();
+        logStartDeleteProject(name);
+        api.deleteProject(projectId);
         deletePropertiesFile();
+        logProjectDeleted();
     }
 
-    private void deleteProject() throws Exception {
-        //todo api
-        String apiKey = fetchApiKey();
-        String projectId = fetchProjectId();
-        String url = fetchBaseUrl() + apiPath + resource + "/" + projectId + "?api_key=" + apiKey;
-
-        HttpUtils.delete(url);
-    }
-
+    //todo properties
     private void deletePropertiesFile() throws Exception {
         String propertiesPath = getPropertiesPath();
         File file = new File(propertiesPath);
