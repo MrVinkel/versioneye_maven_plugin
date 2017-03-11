@@ -15,20 +15,12 @@ import static com.versioneye.utils.log.LogUtil.logArtifactsList;
 import static com.versioneye.utils.log.LogUtil.logDependencySummary;
 
 @Mojo(name = "aggregated-list", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
-public class AggregatedListMojo extends ListMojo {
+public class AggregatedListMojo extends AbstractAggregatedMojo {
 
     private static final Logger LOGGER = Logger.getLogger();
 
     @Override
-    public void doExecute() throws Exception {
-        final int size = reactorProjects.size();
-        MavenProject lastProject = reactorProjects.get(size - 1);
-        if (lastProject != project) {
-            // Skip all projects except the last, to make sure all dependencies in all reactor project have been initialized
-            LOGGER.info("Skipping");
-            return;
-        }
-
+    public void doFinalExecute() throws Exception {
         DependencyResolver dependencyResolver = new DependencyResolver(project, dependencyGraphBuilder, excludeScopes);
 
         Set<Artifact> directArtifacts = dependencyResolver.getDirectDependencies();

@@ -141,14 +141,14 @@ public abstract class AbstractSuperMojo extends AbstractMojo {
             nameStrategy = "name";
         }
         if (nameStrategy.equals("name")) {
-            name = project.getExecutionProject().getName();
+            name = mavenSession.getTopLevelProject().getName();
             if (name == null || name.isEmpty()) {
-                name = project.getExecutionProject().getArtifactId();
+                name = mavenSession.getTopLevelProject().getArtifactId();
             }
         } else if (nameStrategy.equals("artifact_id")) {
-            name = project.getExecutionProject().getArtifactId();
+            name = mavenSession.getTopLevelProject().getArtifactId();
         } else if (nameStrategy.equals("GA")) {
-            name = project.getExecutionProject().getGroupId() + "/" + project.getArtifactId();
+            name = mavenSession.getTopLevelProject().getGroupId() + "/" + project.getArtifactId();
         }
         return name;
     }
