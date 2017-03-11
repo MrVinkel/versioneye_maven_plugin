@@ -1,6 +1,6 @@
-package com.versioneye.log;
+package com.versioneye.utils.log;
 
-import static com.versioneye.log.Logger.LogLevel.INFO;
+import static com.versioneye.utils.log.Logger.LogLevel.INFO;
 
 public abstract class Logger {
 

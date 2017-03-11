@@ -1,4 +1,4 @@
-package com.versioneye.log;
+package com.versioneye.utils.log;
 
 import org.apache.maven.plugin.logging.Log;
 

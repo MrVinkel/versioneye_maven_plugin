@@ -1,8 +1,7 @@
-package com.versioneye.utils;
+package com.versioneye.utils.log;
 
 import com.versioneye.dto.ProjectDependency;
 import com.versioneye.dto.ProjectJsonResponse;
-import com.versioneye.log.Logger;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.MavenProject;
 

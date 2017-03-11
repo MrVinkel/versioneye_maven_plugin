@@ -8,8 +8,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import java.util.Set;
 
 import static com.versioneye.dependency.DependencyResolver.asSortedList;
-import static com.versioneye.utils.LogUtil.logArtifactsList;
-import static com.versioneye.utils.LogUtil.logDependencySummary;
+import static com.versioneye.utils.log.LogUtil.logArtifactsList;
+import static com.versioneye.utils.log.LogUtil.logDependencySummary;
 
 /**
  * Lists all direct and recursive dependencies.

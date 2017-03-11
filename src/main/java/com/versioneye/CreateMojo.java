@@ -6,7 +6,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 
 import java.io.ByteArrayOutputStream;
 
-import static com.versioneye.utils.LogUtil.*;
+import static com.versioneye.utils.log.LogUtil.*;
 
 /**
  * Creates a project at VersionEye based on the dependencies from the current project.

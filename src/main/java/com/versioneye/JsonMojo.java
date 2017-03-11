@@ -5,7 +5,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 
 import java.io.*;
 
-import static com.versioneye.utils.LogUtil.logJsonLocation;
+import static com.versioneye.utils.log.LogUtil.logJsonLocation;
 
 /**
  * Writes all direct dependencies into a JSON file.

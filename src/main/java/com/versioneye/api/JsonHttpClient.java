@@ -1,7 +1,7 @@
 package com.versioneye.api;
 
 import com.versioneye.dto.ErrorJsonResponse;
-import com.versioneye.log.Logger;
+import com.versioneye.utils.log.Logger;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -70,7 +70,10 @@ public class JsonHttpClient {
                 throw new MojoExecutionException("Failed to call " + request.getURI() + " : HTTP error code : " + response.getStatusLine().getStatusCode() + " : Error message :" + errorMessage);
             }
 
-            return tryGetResponseBody(response);
+            String responseBody = tryGetResponseBody(response);
+            LOGGER.debug("Response body: ");
+            LOGGER.debug(responseBody);
+            return responseBody;
         } finally {
             if (response != null) {
                 EntityUtils.consume(response.getEntity());

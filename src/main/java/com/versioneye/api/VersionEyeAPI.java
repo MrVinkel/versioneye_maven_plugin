@@ -1,6 +1,7 @@
 package com.versioneye.api;
 
 import com.versioneye.dto.ProjectJsonResponse;
+import com.versioneye.utils.log.Logger;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.StringBody;
@@ -14,6 +15,7 @@ import static org.apache.http.entity.ContentType.APPLICATION_JSON;
  * https://www.versioneye.com/api/
  */
 public class VersionEyeAPI {
+    private static final Logger LOGGER = Logger.getLogger();
 
     private final String apiUrl;
     private final String baseUrl;
@@ -47,17 +49,37 @@ public class VersionEyeAPI {
         return mapper.readValue(result, ProjectJsonResponse.class);
     }
 
-    public void updateProject() {
+    public ProjectJsonResponse updateProject(ByteArrayOutputStream jsonDependencies, String projectId) throws Exception {
+        String url = apiUrl + "/projects/" + projectId + "?api_key=" + apiKey;
 
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        ByteArrayBody byteArrayBody = new ByteArrayBody(jsonDependencies.toByteArray(), APPLICATION_JSON, "pom.json");
+        builder.addPart("upload", byteArrayBody);
+
+        String result = client.post(url, builder.build());
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(result, ProjectJsonResponse.class);
     }
 
-    public void mergeProjects(String projectIdParent, String projectIdChild) {
-
+    public String mergeProjects(String projectIdParent, String projectIdChild) throws Exception {
+        LOGGER.info("Merging " + projectIdChild + " with " + projectIdParent);
+        if (projectIdParent.equals(projectIdChild)) {
+            LOGGER.debug("Skipping merge - projectIds are the same");
+            return "";
+        }
+        String url = baseUrl + "/projects/" + projectIdParent + "/merge/" + projectIdChild + "?api_key=" + apiKey;
+        //todo what does it return
+        return client.get(url);
     }
 
     public void deleteProject(String projectId) throws Exception {
         String url = apiUrl + "/projects/" + projectId + "?api_key=" + apiKey;
         client.delete(url);
+    }
+
+    public String ping() throws Exception {
+        String url = baseUrl + "/services/ping";
+        return client.get(url);
     }
 
     private void addPartIfIsSet(MultipartEntityBuilder builder, String contentName, String content) {

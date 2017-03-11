@@ -1,7 +1,7 @@
 package com.versioneye;
 
 import com.versioneye.dependency.DependencyResolver;
-import com.versioneye.log.Logger;
+import com.versioneye.utils.log.Logger;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -11,8 +11,8 @@ import java.util.Set;
 
 import static com.versioneye.dependency.DependencyResolver.asSortedList;
 import static com.versioneye.dependency.DependencyResolver.mergeArtifactsWithStrongestScope;
-import static com.versioneye.utils.LogUtil.logArtifactsList;
-import static com.versioneye.utils.LogUtil.logDependencySummary;
+import static com.versioneye.utils.log.LogUtil.logArtifactsList;
+import static com.versioneye.utils.log.LogUtil.logDependencySummary;
 
 @Mojo(name = "aggregated-list", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class AggregatedListMojo extends ListMojo {

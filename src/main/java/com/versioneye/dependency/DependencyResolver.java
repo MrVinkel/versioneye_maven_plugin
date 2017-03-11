@@ -1,6 +1,6 @@
 package com.versioneye.dependency;
 
-import com.versioneye.log.Logger;
+import com.versioneye.utils.log.Logger;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.project.MavenProject;
@@ -13,7 +13,7 @@ import java.util.*;
 
 import static com.versioneye.dependency.Scope.getStrongestScope;
 import static com.versioneye.dependency.Scope.scopeFromString;
-import static com.versioneye.log.Logger.getLogger;
+import static com.versioneye.utils.log.Logger.getLogger;
 
 public class DependencyResolver {
     private static final Logger LOGGER = getLogger();

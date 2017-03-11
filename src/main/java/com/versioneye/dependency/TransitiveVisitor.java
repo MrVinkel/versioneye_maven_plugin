@@ -1,6 +1,6 @@
 package com.versioneye.dependency;
 
-import com.versioneye.log.Logger;
+import com.versioneye.utils.log.Logger;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.shared.dependency.graph.DependencyNode;
 import org.apache.maven.shared.dependency.graph.traversal.DependencyNodeVisitor;
@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static com.versioneye.log.Logger.getLogger;
+import static com.versioneye.utils.log.Logger.getLogger;
 
 public class TransitiveVisitor implements DependencyNodeVisitor {
     private static final Logger LOGGER = getLogger();

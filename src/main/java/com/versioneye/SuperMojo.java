@@ -1,7 +1,7 @@
 package com.versioneye;
 
 import com.versioneye.api.VersionEyeAPI;
-import com.versioneye.log.MavenLogger;
+import com.versioneye.utils.log.MavenLogger;
 import com.versioneye.utils.PropertiesUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
@@ -23,7 +23,7 @@ import java.security.cert.X509Certificate;
 import java.util.List;
 import java.util.Properties;
 
-import static com.versioneye.utils.LogUtil.logVersionEyeBanner;
+import static com.versioneye.utils.log.LogUtil.logVersionEyeBanner;
 
 /**
  * The Mother of all Mojos!

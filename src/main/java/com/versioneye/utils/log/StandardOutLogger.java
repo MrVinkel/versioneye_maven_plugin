@@ -1,7 +1,7 @@
-package com.versioneye.log;
+package com.versioneye.utils.log;
 
 
-import static com.versioneye.log.Logger.LogLevel.*;
+import static com.versioneye.utils.log.Logger.LogLevel.*;
 
 public class StandardOutLogger extends Logger {
     protected static LogLevel level = INFO;

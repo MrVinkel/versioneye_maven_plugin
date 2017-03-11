@@ -4,8 +4,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 
 import java.io.File;
 
-import static com.versioneye.utils.LogUtil.logProjectDeleted;
-import static com.versioneye.utils.LogUtil.logStartDeleteProject;
+import static com.versioneye.utils.log.LogUtil.logProjectDeleted;
+import static com.versioneye.utils.log.LogUtil.logStartDeleteProject;
 
 @Mojo(name = "delete", aggregator = true)
 public class DeleteMojo extends ProjectMojo {
