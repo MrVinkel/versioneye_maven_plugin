@@ -23,9 +23,9 @@ public class LogUtil {
     }
 
     public static void logNoDependenciesFound(MavenProject project) throws Exception {
-        LOGGER.info(".");
+        LOGGER.info("");
         LOGGER.info("There are no dependencies in this project! - " + project.getId());
-        LOGGER.info(".");
+        LOGGER.info("");
     }
 
     public static void logArtifactsList(String type, List<Artifact> artifacts) {
@@ -45,14 +45,20 @@ public class LogUtil {
         LOGGER.info("");
     }
 
+    public static void logCreateProject() {
+        LOGGER.info("");
+        LOGGER.info("Creating project...");
+        LOGGER.info("");
+    }
+
     public static void logStartUploadDependencies() {
-        LOGGER.info(".");
-        LOGGER.info("Starting to upload dependencies. This can take a couple seconds ... ");
-        LOGGER.info(".");
+        LOGGER.info("");
+        LOGGER.info("Starting to upload dependencies. This can take a couple seconds...");
+        LOGGER.info("");
     }
 
     public static void logJsonResponse(ProjectJsonResponse response) throws Exception {
-        LOGGER.info(".");
+        LOGGER.info("");
         LOGGER.info("Project name: " + response.getName());
         LOGGER.info("Project id: " + response.getId());
         LOGGER.info("Dependencies: " + response.getDep_number());
@@ -72,9 +78,9 @@ public class LogUtil {
 
 
     public static void logStartDeleteProject() {
-        LOGGER.info(".");
+        LOGGER.info("");
         LOGGER.info("Starting to delete this project from the VersionEye server. This can take a couple seconds ... ");
-        LOGGER.info(".");
+        LOGGER.info("");
     }
 
     public static void logJsonLocation(String pathToJson) {

@@ -1,5 +1,6 @@
 package com.versioneye;
 
+import com.versioneye.api.VersionEyeAPI;
 import com.versioneye.log.MavenLogger;
 import com.versioneye.utils.PropertiesUtils;
 import org.apache.maven.execution.MavenSession;
@@ -53,8 +54,12 @@ public abstract class SuperMojo extends AbstractMojo {
     @Parameter( property = "baseUrl", defaultValue = "https://www.versioneye.com" )
     protected String baseUrl;
 
+    // todo remove
     @Parameter( property = "apiPath", defaultValue = "/api/v2" )
     protected String apiPath;
+
+    @Parameter( property = "apiVersion", defaultValue = "v2" )
+    protected String apiVersion;
 
     @Parameter( property = "projectId" )
     protected String projectId;
@@ -110,9 +115,14 @@ public abstract class SuperMojo extends AbstractMojo {
     // Properties in src/main/resources
     protected Properties properties = null;
 
+    protected VersionEyeAPI api;
+
     public void execute() throws MojoExecutionException, MojoFailureException {
         new MavenLogger(getLog());
         try {
+            //todo
+//            apiKey = resolveApiKey();
+            api = new VersionEyeAPI(baseUrl, apiVersion, apiKey);
             doExecute();
         } catch (MojoFailureException e) {
             throw e;

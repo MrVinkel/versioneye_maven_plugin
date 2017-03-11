@@ -8,6 +8,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.BufferedReader;
@@ -77,7 +78,7 @@ public class HttpUtils {
         if (statusCode != 200 && statusCode != 201){
             String err = getErrorMessage(response);
             String errMsg = "Status Code: " + statusCode + " -> " + err + " for URL: " + url;
-            throw new Exception(errMsg);
+            throw new MojoExecutionException(errMsg);
         }
 
         return new InputStreamReader(response.getEntity().getContent());
