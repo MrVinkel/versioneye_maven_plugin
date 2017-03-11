@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Set;
 
 public class DependencyToJsonConverter {
-
     private static final String SCOPE_DIRECT = "direct";
     private static final String SCOPE_TRANSITIVE = "transitive";
 
@@ -53,4 +52,5 @@ public class DependencyToJsonConverter {
         }
         return JsonUtils.dependenciesToJson(project, dependenciesList, nameStrategy);
     }
+
 }

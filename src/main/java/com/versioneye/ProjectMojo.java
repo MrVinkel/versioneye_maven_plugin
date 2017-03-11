@@ -67,18 +67,6 @@ public abstract class ProjectMojo extends SuperMojo {
         return JsonUtils.dependenciesToJson(project, dependencies, nameStrategy);
     }
 
-    //todo Json converter
-    protected Map<String, Object> getDirectDependenciesJsonMap(String nameStrategy) throws Exception {
-        List<Dependency> dependencies = project.getDependencies();
-        if (dependencies == null || dependencies.isEmpty()){
-            return null;
-        } else {
-            iterateThrough(dependencies);
-        }
-        List<Map<String, Object>> dependencyHashes = JsonUtils.getDependencyHashes(dependencies, project.getPluginManagement().getPlugins());
-        return JsonUtils.getJsonPom(project, dependencyHashes, nameStrategy);
-    }
-
 
     //todo api
     protected ProjectJsonResponse updateExistingProject(String resource, String projectId, ByteArrayOutputStream outStream) throws Exception {
@@ -127,12 +115,6 @@ public abstract class ProjectMojo extends SuperMojo {
         }
         PropertiesUtils utils = new PropertiesUtils();
         utils.writeProperties(properties, getPropertiesPath());
-    }
-
-    private void iterateThrough(List<Dependency> dependencies){
-        for(Dependency dep: dependencies){
-            getLog().info(" - dependency: " + dep.getGroupId() + "/" + dep.getArtifactId() + " " + dep.getVersion());
-        }
     }
 
 }

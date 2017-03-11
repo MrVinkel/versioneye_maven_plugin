@@ -137,7 +137,7 @@ public abstract class SuperMojo extends AbstractMojo {
         } catch (Exception e) {
             throw new MojoExecutionException("Oh no! Something went wrong. " +
                     "Get in touch with the VersionEye guys and give them feedback. " +
-                    "You find them on Twitter at https//twitter.com/VersionEye. " + e.getMessage(), e);
+                    "You find them on Twitter at https//twitter.com/VersionEye. Error: " + e.getMessage(), e);
         }
     }
 
