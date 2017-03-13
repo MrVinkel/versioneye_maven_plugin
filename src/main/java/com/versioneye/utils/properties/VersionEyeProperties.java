@@ -1,5 +1,7 @@
 package com.versioneye.utils.properties;
 
+import com.versioneye.utils.log.Logger;
+
 import java.io.*;
 import java.util.Properties;
 
@@ -37,6 +39,7 @@ public class VersionEyeProperties {
             return systemPropertyKey;
         }
     }
+    private static final Logger LOGGER = Logger.getLogger();
 
     private final String projectResourcesDirectoryPropertiesPath;
 
@@ -84,9 +87,13 @@ public class VersionEyeProperties {
 
     private static Properties readPropertyFile(String filePath) throws Exception {
         Properties properties = new Properties();
-        File file = new File(filePath);
-        InputStream inputStream = new FileInputStream(file);
-        properties.load(inputStream);
+        try {
+            File file = new File(filePath);
+            InputStream inputStream = new FileInputStream(file);
+            properties.load(inputStream);
+        } catch(Exception e) {
+            LOGGER.debug("Failed to load properties from filePath", e);
+        }
         return properties;
     }
 

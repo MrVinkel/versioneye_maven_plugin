@@ -16,7 +16,7 @@ public class JsonMojo extends AbstractSuperMojo {
     @Override
     public void doExecute() throws Exception {
         DependencyToJsonConverter dependencyToJsonConverter = new DependencyToJsonConverter(project, dependencyGraphBuilder);
-        ByteArrayOutputStream dependenciesAsJsonStream = dependencyToJsonConverter.getDependenciesAsJsonStream(name, transitiveDependencies, excludeScopes);
+        ByteArrayOutputStream dependenciesAsJsonStream = dependencyToJsonConverter.getDependenciesAsJsonStream(name, includeTransitiveDependencies, excludeScopes);
         String filePath = outputDirectory + File.separator + "pom.json";
         tryWriteJsonPomToFile(dependenciesAsJsonStream, filePath);
         logJsonLocation(filePath);

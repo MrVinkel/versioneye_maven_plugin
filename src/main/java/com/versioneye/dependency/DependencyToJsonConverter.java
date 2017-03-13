@@ -26,16 +26,23 @@ public class DependencyToJsonConverter {
 
     public ByteArrayOutputStream getDependenciesAsJsonStream(String name, boolean includeTransitiveDependencies, List<String> excludeScopes) throws Exception {
         DependencyResolver dependencyResolver = new DependencyResolver(project, dependencyGraphBuilder, excludeScopes);
-        Set<Artifact> dependencies = new HashSet<Artifact>();
 
         Set<Artifact> directDependencies = dependencyResolver.getDirectDependencies();
-        dependencies.addAll(directDependencies);
 
+        Set<Artifact> transitiveDependencies = null;
         if(includeTransitiveDependencies) {
-            Set<Artifact> transitiveDependencies = dependencyResolver.getTransitiveDependencies();
+            transitiveDependencies = dependencyResolver.getTransitiveDependencies();
+        }
+        return getDependenciesAsJsonStream(name, directDependencies, transitiveDependencies);
+    }
+
+
+    public ByteArrayOutputStream getDependenciesAsJsonStream(String name, Set<Artifact> directDependencies, Set<Artifact> transitiveDependencies) throws Exception {
+        Set<Artifact> dependencies = new HashSet<Artifact>();
+        dependencies.addAll(directDependencies);
+        if(transitiveDependencies != null) {
             dependencies.addAll(transitiveDependencies);
         }
-
         List<Dependency> dependenciesList = new ArrayList<Dependency>();
         for (Artifact artifact : dependencies) {
             Dependency dependency = new Dependency();

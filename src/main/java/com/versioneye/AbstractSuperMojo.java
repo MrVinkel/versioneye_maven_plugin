@@ -95,8 +95,8 @@ public abstract class AbstractSuperMojo extends AbstractMojo {
     @Parameter(property = "name")
     protected String name = null;
 
-    @Parameter(property = "transitiveDependencies")
-    protected boolean transitiveDependencies = false;
+    @Parameter(property = "includeTransitiveDependencies")
+    protected boolean includeTransitiveDependencies = false;
 
     protected VersionEyeAPI api;
     protected VersionEyeProperties properties;

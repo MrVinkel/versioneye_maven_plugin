@@ -19,12 +19,13 @@ public class CreateMojo extends AbstractSuperMojo {
         logCreateProject();
 
         DependencyToJsonConverter dependencyToJsonConverter = new DependencyToJsonConverter(project, dependencyGraphBuilder);
-        ByteArrayOutputStream jsonDependenciesStream = dependencyToJsonConverter.getDependenciesAsJsonStream(name, transitiveDependencies, excludeScopes);
+        ByteArrayOutputStream jsonDependenciesStream = dependencyToJsonConverter.getDependenciesAsJsonStream(name, includeTransitiveDependencies, excludeScopes);
         ProjectJsonResponse response = api.createProject(jsonDependenciesStream, visibility, name, organisation, team);
 
         logJsonResponse(response, baseUrl, response.getId());
 
         if (updateProperties) {
+            properties.setProjectId(response.getId());
             properties.updateProjectProperties();
         }
     }

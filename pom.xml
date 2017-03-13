@@ -115,33 +115,33 @@
   <build>
     <plugins>
 
-      <plugin>
+<!--      <plugin>
         <groupId>com.versioneye</groupId>
         <artifactId>versioneye-maven-plugin</artifactId>
         <version>3.11.1</version>
         <configuration>
-          <!--<apiKey>YOUR_API_KEY</apiKey> --> <!-- To find here: https://www.versioneye.com/settings/api -->
-          <!--<baseUrl>http://localhost:3000</baseUrl>-->
-          <!--<proxyHost>127.0.0.1</proxyHost>-->
-          <!--<proxyPort>8888</proxyPort>-->
-          <!--<proxyUser>proxy_hopsi</proxyUser>-->
-          <!--<proxyPassword>dont_tell_anybody</proxyPassword>-->
-          <!--<updatePropertiesAfterCreate>false</updatePropertiesAfterCreate>-->
-          <!--<mergeAfterCreate>false</mergeAfterCreate>--> <!-- This is only for multi module projects! -->
-          <!--<parentGroupId>com.versioneye</parentGroupId>-->
-          <!--<parentArtifactId>versioneye-maven-plugin</parentArtifactId>-->
-          <!--<nameStrategy>GA</nameStrategy>--> <!-- Default value is 'name'. Other options are 'GA' and 'artifact_id'. -->
-          <!--<skipScopes>test</skipScopes>-->
-          <!--<organisation>versioneye</organisation>-->
-          <!--<name>NameOfTheProjectAtVersionEye</name>-->
-          <!--<visibility>TrueOrFalse</visibility>-->
-          <!-- <transitiveDependencies>true</transitiveDependencies> -->
+          &lt;!&ndash;<apiKey>YOUR_API_KEY</apiKey> &ndash;&gt; &lt;!&ndash; To find here: https://www.versioneye.com/settings/api &ndash;&gt;
+          &lt;!&ndash;<baseUrl>http://localhost:3000</baseUrl>&ndash;&gt;
+          &lt;!&ndash;<proxyHost>127.0.0.1</proxyHost>&ndash;&gt;
+          &lt;!&ndash;<proxyPort>8888</proxyPort>&ndash;&gt;
+          &lt;!&ndash;<proxyUser>proxy_hopsi</proxyUser>&ndash;&gt;
+          &lt;!&ndash;<proxyPassword>dont_tell_anybody</proxyPassword>&ndash;&gt;
+          &lt;!&ndash;<updatePropertiesAfterCreate>false</updatePropertiesAfterCreate>&ndash;&gt;
+          &lt;!&ndash;<mergeAfterCreate>false</mergeAfterCreate>&ndash;&gt; &lt;!&ndash; This is only for multi module projects! &ndash;&gt;
+          &lt;!&ndash;<parentGroupId>com.versioneye</parentGroupId>&ndash;&gt;
+          &lt;!&ndash;<parentArtifactId>versioneye-maven-plugin</parentArtifactId>&ndash;&gt;
+          &lt;!&ndash;<nameStrategy>GA</nameStrategy>&ndash;&gt; &lt;!&ndash; Default value is 'name'. Other options are 'GA' and 'artifact_id'. &ndash;&gt;
+          &lt;!&ndash;<skipScopes>test</skipScopes>&ndash;&gt;
+          &lt;!&ndash;<organisation>versioneye</organisation>&ndash;&gt;
+          &lt;!&ndash;<name>NameOfTheProjectAtVersionEye</name>&ndash;&gt;
+          &lt;!&ndash;<visibility>TrueOrFalse</visibility>&ndash;&gt;
+          &lt;!&ndash; <transitiveDependencies>true</transitiveDependencies> &ndash;&gt;
         </configuration>
-      </plugin>
+      </plugin>-->
 
       <!--http://central.sonatype.org/pages/apache-maven.html-->
       <!--mvn clean deploy -Dmaven.test.skip=true -Dgpg.passphrase=-->
-      <plugin>
+<!--      <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
         <version>1.6.7</version>
@@ -151,14 +151,14 @@
           <nexusUrl>https://oss.sonatype.org/</nexusUrl>
           <autoReleaseAfterClose>true</autoReleaseAfterClose>
         </configuration>
-      </plugin>
+      </plugin>-->
 
       <!-- mvn gpg:sign -->
       <!-- mvn gpg:sign-and-deploy-file -->
       <!-- mvn clean deploy -Dgpg.passphrase=my_secret_passphrase -->
       <!-- mvn clean deploy -Dmaven.test.skip=true -Dgpg.passphrase=my_secret_passphrase -->
       <!-- mvn clean install -Dgpg.passphrase=my_secret_passphrase -->
-     <!-- <plugin>
+<!--      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
         <executions>
@@ -237,7 +237,7 @@
     </plugins>
   </build>
 
-  <reporting>
+ <!-- <reporting>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -252,6 +252,6 @@
         </configuration>
       </plugin>
     </plugins>
-  </reporting>
+  </reporting>-->
 
 </project>

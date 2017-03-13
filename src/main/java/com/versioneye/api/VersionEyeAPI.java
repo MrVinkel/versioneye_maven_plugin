@@ -50,7 +50,7 @@ public class VersionEyeAPI {
 
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         ByteArrayBody byteArrayBody = new ByteArrayBody(jsonDependencies.toByteArray(), APPLICATION_JSON, "pom.json");
-        builder.addPart("upload", byteArrayBody);
+        builder.addPart("project_file", byteArrayBody);
 
         String result = client.post(url, builder.build());
         ObjectMapper mapper = new ObjectMapper();
