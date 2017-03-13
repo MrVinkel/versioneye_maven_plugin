@@ -11,14 +11,15 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,7 +28,7 @@ import static com.google.common.net.HttpHeaders.CONTENT_TYPE;
 import static org.apache.http.HttpStatus.*;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
-public class JsonHttpClient {
+public class HttpClientWrapper {
     private static final Logger LOGGER = Logger.getLogger();
 
     private static final String USER_AGENT = "VersionEye Maven Plugin";
@@ -44,9 +45,13 @@ public class JsonHttpClient {
     }
 
     public String get(String url) throws Exception {
+        return get(url, APPLICATION_JSON.getMimeType());
+    }
+
+    public String get(String url, String contentType) throws Exception {
         RequestBuilder getRequest = RequestBuilder.get()
                 .setUri(url)
-                .setHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType());
+                .setHeader(CONTENT_TYPE, contentType);
 
         return executeRequest(getRequest, SC_OK);
     }
@@ -146,6 +151,50 @@ public class JsonHttpClient {
             basicCredentialsProvider.setCredentials(
                     new AuthScope(host, portAsInt),
                     new UsernamePasswordCredentials(username, password));
+        }
+    }
+
+    public void getFile(String url, String contentType, File outputFile) throws Exception {
+        RequestBuilder requestBuilder = RequestBuilder.get()
+                .setUri(url)
+                .setHeader(CONTENT_TYPE, contentType);
+
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder
+                .create()
+                .setUserAgent(USER_AGENT);
+        if (basicCredentialsProvider != null) {
+            httpClientBuilder.setDefaultCredentialsProvider(basicCredentialsProvider);
+        }
+        HttpClient httpClient = httpClientBuilder.build();
+        HttpResponse response = null;
+        try {
+            if (proxy != null) {
+                RequestConfig config = RequestConfig.custom()
+                        .setProxy(proxy)
+                        .build();
+                requestBuilder.setConfig(config);
+            }
+            HttpUriRequest request = requestBuilder.build();
+            response = httpClient.execute(request);
+
+            Set<Integer> statusCodesSet = new HashSet<Integer>();
+            statusCodesSet.add(SC_OK);
+            if (!statusCodesSet.contains(response.getStatusLine().getStatusCode())) {
+                String errorMessage = getErrorMessage(response);
+                throw new MojoExecutionException("Failed to call " + request.getURI() + " : HTTP error code : " + response.getStatusLine().getStatusCode() + " : Error message :" + errorMessage);
+            }
+
+            InputStream is = response.getEntity().getContent();
+            FileOutputStream fos = new FileOutputStream(outputFile);
+            int inByte;
+            while ((inByte = is.read()) != -1)
+                fos.write(inByte);
+            is.close();
+            fos.close();
+        } finally {
+            if (response != null) {
+                EntityUtils.consume(response.getEntity());
+            }
         }
     }
 }

@@ -8,6 +8,10 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
 
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
@@ -18,13 +22,15 @@ public class VersionEyeAPI {
     private static final Logger LOGGER = Logger.getLogger();
 
     private final String apiUrl;
+    private String baseUrl;
     private final String apiKey;
-    private final JsonHttpClient client;
+    private final HttpClientWrapper client;
 
     public VersionEyeAPI(String baseUrl, String apiVersion, String apiKey, String proxyHost, String proxyPort, String proxyUsername, String proxyPassword) {
+        this.baseUrl = baseUrl;
         this.apiKey = "?api_key=" + apiKey;
         this.apiUrl = baseUrl + "/api/" + apiVersion;
-        client = new JsonHttpClient();
+        client = new HttpClientWrapper();
         client.setProxy(proxyHost, proxyPort, proxyUsername, proxyPassword);
     }
 
@@ -73,6 +79,24 @@ public class VersionEyeAPI {
         client.delete(url);
     }
 
+    public void fetchLicenseReport(String projectId, File reportPath, String reportName)  throws Exception {
+        String url = baseUrl + "/user/projects/" + projectId + "/lwl_export";
+
+        File licenseReportFile = new File(reportPath.getCanonicalPath() + File.separator + reportName);
+        licenseReportFile.getParentFile().mkdirs();
+        licenseReportFile.createNewFile();
+        client.getFile(url, "application/pdf", licenseReportFile);
+    }
+
+    public void fetchSecurityIssuesReport(String projectId, File reportPath, String reportName)  throws Exception {
+        String url = baseUrl + "/user/projects/" + projectId + "/sec_export";
+
+        File licenseReportFile = new File(reportPath.getCanonicalPath() + File.separator + reportName);
+        licenseReportFile.getParentFile().mkdirs();
+        licenseReportFile.createNewFile();
+        client.getFile(url, "application/pdf", licenseReportFile);
+    }
+
     public String ping() throws Exception {
         String url = apiUrl + "/services/ping";
         return client.get(url);
@@ -83,5 +107,4 @@ public class VersionEyeAPI {
             builder.addPart(contentName, new StringBody(content, APPLICATION_JSON));
         }
     }
-
 }

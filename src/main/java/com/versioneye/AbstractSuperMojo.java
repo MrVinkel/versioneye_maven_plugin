@@ -98,6 +98,12 @@ public abstract class AbstractSuperMojo extends AbstractMojo {
     @Parameter(property = "includeTransitiveDependencies")
     protected boolean includeTransitiveDependencies = false;
 
+    @Parameter(property = "licenseReportName", defaultValue = "LicenseReport-${project.version}.pdf")
+    protected String licenseReportName;
+
+    @Parameter(property = "securityIssuesReportName", defaultValue = "SecurityIssuesReport-${project.version}.pdf")
+    protected String securityIssuesReportName;
+
     protected VersionEyeAPI api;
     protected VersionEyeProperties properties;
 

@@ -1,11 +1,15 @@
 package com.versioneye;
 
 import com.versioneye.dependency.DependencyToJsonConverter;
+import com.versioneye.dto.ProjectJsonResponse;
+import com.versioneye.utils.log.LogUtil;
 import com.versioneye.utils.log.Logger;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
 import java.io.ByteArrayOutputStream;
+
+import static com.versioneye.utils.log.LogUtil.logJsonResponse;
 
 @Mojo(name = "aggregated-update", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class AggregatedUpdateMojo extends AbstractAggregatedMojo {
@@ -18,8 +22,8 @@ public class AggregatedUpdateMojo extends AbstractAggregatedMojo {
         ByteArrayOutputStream dependenciesAsJsonStream = jsonConverter.getDependenciesAsJsonStream(name, directDependencies, transitiveDependencies);
 
         LOGGER.info("Uploading result to https://versioneye.com");
-        api.updateProject(dependenciesAsJsonStream, projectId);
+        ProjectJsonResponse response = api.updateProject(dependenciesAsJsonStream, projectId);
 
-        LOGGER.info("Done!");
+        logJsonResponse(response, baseUrl, projectId);
     }
 }
