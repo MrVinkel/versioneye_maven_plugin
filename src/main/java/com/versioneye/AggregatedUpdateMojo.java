@@ -2,7 +2,6 @@ package com.versioneye;
 
 import com.versioneye.dependency.DependencyToJsonConverter;
 import com.versioneye.dto.ProjectJsonResponse;
-import com.versioneye.utils.log.LogUtil;
 import com.versioneye.utils.log.Logger;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -25,5 +24,11 @@ public class AggregatedUpdateMojo extends AbstractAggregatedMojo {
         ProjectJsonResponse response = api.updateProject(dependenciesAsJsonStream, projectId);
 
         logJsonResponse(response, baseUrl, projectId);
+
+        validateResponse(response);
+    }
+
+    public void validateResponse(ProjectJsonResponse response) throws Exception {
+        // Validate license, security etc.
     }
 }
